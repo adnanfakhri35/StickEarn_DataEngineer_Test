@@ -1,0 +1,4 @@
+polars
+clickhouse-connect
+pandas
+h3

@@ -1,0 +1,30 @@
+services:
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: ch-dev
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    environment:
+      CLICKHOUSE_USER: dev
+      CLICKHOUSE_PASSWORD: dev123
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    volumes:
+      - ch_dev_data:/var/lib/clickhouse
+      - ch_dev_logs:/var/log/clickhouse-server
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+
+  etl:
+    build: .
+    container_name: python-etl
+    volumes:
+      - ./app:/app
+    depends_on:
+      - clickhouse
+
+volumes:
+  ch_dev_data:
+  ch_dev_logs:
